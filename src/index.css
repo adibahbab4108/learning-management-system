@@ -3,9 +3,11 @@
 
 @theme {
     --font-outfit: "Outfit", sans-serif;
-    --grid-cols-auto: "repeat(auto-fit, minmax(200px, 1fr))"
 }
 
 * {
     font-family: Outfit;
+}
+.grid-cols-auto{
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
