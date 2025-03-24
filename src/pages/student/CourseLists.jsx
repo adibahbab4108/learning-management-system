@@ -13,11 +13,17 @@ const CourseLists = () => {
     const { input } = useParams();
 
     useEffect(() => {
-        if (allCourses && allCourses.length > 0) {
-            const tempCourses = allCourses.slice()
-            input ? setFilteredCourse(tempCourses.filter(item => item.courseTitle.toLowerCase().includes(input.toLocaleLowerCase()))) : setFilteredCourse(tempCourses)
-        }
-    }, [allCourses, input])
+        if (!allCourses?.length) return; 
+
+        const filtered = input
+            ? allCourses.filter(course =>
+                course.courseTitle.toLowerCase().includes(input.toLowerCase())
+            )
+            : allCourses;
+
+        setFilteredCourse(filtered);
+    }, [allCourses, input]);
+    
     return (
         <>
             <div className="relative md:px-36 px-8 pt-20 text-left">

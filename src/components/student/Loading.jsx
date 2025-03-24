@@ -4,7 +4,6 @@ const Loading = () => {
     return (
         <div>
             Loading
-            Loading
         </div>
     );
 };
