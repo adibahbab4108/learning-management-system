@@ -4,10 +4,19 @@
 @theme {
     --font-outfit: "Outfit", sans-serif;
 }
-
+@layer base{
+    html{
+        scroll-behavior: smooth;
+    }
+}
 * {
     font-family: Outfit;
 }
-.grid-cols-auto{
+
+.grid-cols-auto {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+::-webkit-scrollbar {
+    display: none;
 }

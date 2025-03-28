@@ -10,7 +10,13 @@ const CourseDetails = () => {
     const { id } = useParams()
     const [courseData, setCourseData] = useState(null)
     const [openSections, setOpenSections] = useState({})
-    const { allCourses, calculateRating, calculateChapterTime, calculateCourseDuration, calculateNoOfLectures } = useContext(appContext)
+    const { allCourses,
+        calculateRating,
+        calculateChapterTime,
+        calculateCourseDuration,
+        calculateNoOfLectures,
+        currency
+    } = useContext(appContext)
     const rating = Math.floor(calculateRating(courseData));
 
     useEffect(() => {
@@ -55,7 +61,7 @@ const CourseDetails = () => {
                                     <div key={index} className="border border-gray-300 bg-white mb-2 rounded">
                                         <div onClick={() => toggleSection(index)} className="flex items-center justify-between px-4 py-3 cursor-pointer select-none">
                                             <div className="flex items-center gap-2">
-                                                <img src={assets.down_arrow_icon} alt="arrow icon" />
+                                                <img className={`transform transition-transform ${openSections[index] ? 'rotate-180' : ''}`} src={assets.down_arrow_icon} alt="arrow icon" />
                                                 <p className="font-medium md:text-base text-sm">{chapter.chapterTitle}</p>
                                             </div>
                                             <p className="text-sm ">{chapter.chapterContent.length} lectures - {calculateChapterTime(chapter)}</p>
@@ -83,9 +89,42 @@ const CourseDetails = () => {
                             }
                         </div>
                     </div>
+                    <div className="py-20 text-sm md:text-base">
+                        <h3 className="text-xl font-semibold">Course Description</h3>
+                        <p className="pt-3" dangerouslySetInnerHTML={{ __html: courseData.courseDescription }}></p>
+
+                    </div>
                 </div>
                 {/* Right column */}
-                <div>
+                <div className="min-w-[300px] sm:min-w-[420px] overflow-hidden rounded-t-xl shadow-lg">
+                    <img src={courseData.courseThumbnail} alt="" />
+                    <div className="p-5">
+                        <div className="flex items-center gap-2">
+                            <img className="w-3.5" src={assets.time_left_clock_icon} alt="" />
+                            <p className="text-red-500"> <span className="font-medium">5 days</span> left at this price!</p>
+                        </div>
+                        <div className="flex gap-3 items-center pt-2">
+                            <p className="text-gray-800 md:text-4xl text-2xl font-semibold">{currency} {(courseData.coursePrice - courseData.discount * courseData.coursePrice / 100).toFixed(2)}</p>
+                            <p className="text-lg text-gray-500 line-through">{currency} {courseData.coursePrice}</p>
+                            <p className="md:text-lg text-gray-500">{courseData.discount}% off</p>
+                        </div>
+                        <div className="flex items-center text-sm md:text-base gap-4 pt-2 md:pt-4 text-gray-500">
+                            <div className="flex items-center gap-1">
+                                <img src={assets.star} alt="star rating" />
+                                <p>{calculateRating(courseData)}</p>
+                            </div>
+                            <div className="h-4 w-px bg-gray-500/40"></div>
+                            <div className="flex items-center gap-1">
+                                <img src={assets.time_clock_icon} alt="clock icon" />
+                                <p>{calculateCourseDuration(courseData)}</p>
+                            </div>
+                            <div className="h-4 w-px bg-gray-500/40"></div>
+                            <div className="flex items-center gap-1">
+                                <img src={assets.lesson_icon} alt="clock icon" />
+                                <p>{calculateNoOfLectures(courseData)}</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </>
