@@ -4,10 +4,10 @@ import { assets } from "../../assets/assets";
 const Footer = () => {
     return (
         <footer className="bg-gray-900 md:px-36 text-left w-full mt-10">
-            <div className="flex flex-col md:flex-row items-start px-8 md:px-0 justify-center gap-10 md:gap-32 py-10 border-b border-white/30">
-                <div className="flex flex-col md:items-start items-center w-full">
+            <div className="flex flex-col md:flex-row items-start px-8 md:px-0 justify-center gap-10 md:gap-28 py-10 border-b border-white/30">
+                <div className=" flex flex-col md:items-start items-center w-full">
                     <img src={assets.logo_dark} alt="logo" />
-                    <p className="mt-6 text-center md:text-left text-sm text-white/80">Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit unde dicta necessitatibus, dolores possimus eos porro vitae quam nostrum animi, delectus qui quos dolorem. Commodi vero sit reprehenderit excepturi officia?</p>
+                    <p className="mt-6 text-center md:text-left text-sm text-white/80 ">Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit unde dicta necessitatibu.</p>
                 </div>
                 <div>
                     <h2 className="font-semibold mb-5 text-white">Company</h2>
@@ -27,7 +27,7 @@ const Footer = () => {
                     </div>
                 </div>
             </div>
-            <p className="flex items-center py-4 text-center text-xm md:text-sm text-white/60">Copyright 2025 <MdCopyright className="mx-1" /> Adib. All right Reserved  </p>
+            <p className="flex items-center justify-center py-4 md:text-sm text-white/60">Copyright 2025 <MdCopyright className="mx-1" /> Adib. All right Reserved  </p>
         </footer>
     );
 };

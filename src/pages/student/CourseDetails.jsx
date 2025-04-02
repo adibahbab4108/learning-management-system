@@ -2,14 +2,18 @@ import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import appContext from "../../context/AppContext";
 import Loading from "../../components/student/Loading";
+import Footer from "../../components/student/Footer";
 import { assets } from "../../assets/assets";
 import { FaUser } from "react-icons/fa";
 import humanizeDuration from "humanize-duration";
+import YouTube from "react-youtube";
 
 const CourseDetails = () => {
     const { id } = useParams()
     const [courseData, setCourseData] = useState(null)
     const [openSections, setOpenSections] = useState({})
+    const [isAlreadyEnrolled, setIsAlreadyEnrolled] = useState(false)
+    const [playerData, setPlayerData] = useState(null)
     const { allCourses,
         calculateRating,
         calculateChapterTime,
@@ -75,7 +79,9 @@ const CourseDetails = () => {
                                                             <div className="flex items-center justify-between w-full text-gray-800 text-xs md:text-base">
                                                                 <p>{lecture.lectureTitle}</p>
                                                                 <div className="flex gap-2">
-                                                                    {lecture.isPreviewFree && <p className="text-blue-500 cursor-pointer">Preview</p>}
+                                                                    {lecture.isPreviewFree && <p onClick={() => setPlayerData({
+                                                                        videoId: lecture.lectureUrl.split('/').pop()
+                                                                    })} className="text-blue-500 cursor-pointer">Preview</p>}
                                                                     <p>{humanizeDuration(lecture.lectureDuration * 60 * 1000, { units: ['h', 'm'] })}</p>
                                                                 </div>
                                                             </div>
@@ -96,8 +102,16 @@ const CourseDetails = () => {
                     </div>
                 </div>
                 {/* Right column */}
-                <div className="min-w-[300px] sm:min-w-[420px] overflow-hidden rounded-t-xl shadow-lg">
-                    <img src={courseData.courseThumbnail} alt="" />
+                <div className="min-w-[300px] max-w-xl sm:min-w-[420px] overflow-hidden rounded-t-xl shadow-lg">
+                    {
+                        playerData ? <YouTube
+                            videoId={playerData.videoId}
+                            opts={{ playerVars: { autoplay: 1 } }}
+                            iframeClassName="w-full aspect-video"
+                        />
+                            : <img src={courseData.courseThumbnail} alt="" />
+                    }
+
                     <div className="p-5">
                         <div className="flex items-center gap-2">
                             <img className="w-3.5" src={assets.time_left_clock_icon} alt="" />
@@ -124,9 +138,25 @@ const CourseDetails = () => {
                                 <p>{calculateNoOfLectures(courseData)}</p>
                             </div>
                         </div>
+                        <button className="md:mt-6 mt-4 w-full py-3 rounded bg-blue-600 text-white font-medium">{isAlreadyEnrolled ? 'Already Enrolled' : 'Enroll Now'}</button>
+                        <div className="pt-6">
+                            <p className="md:text-xl font-medium text-gray-800">What's in the course??</p>
+                            <ul className="ml-4 pt-2 text-sm ms:text-base list-disc text-gray-500">
+                                <li>Lifetime access with free updates</li>
+                                <li>Step-by-step. hands on project guidance</li>
+                                <li>
+                                    Downloadable resources and source code.
+                                </li>
+                                <li>
+                                    Quizzes to test your knowledge.
+                                </li>
+                                <li>Certificate of completion</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
+            <Footer />
         </>
     ) : <Loading />
 };

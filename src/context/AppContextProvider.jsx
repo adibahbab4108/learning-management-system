@@ -8,10 +8,12 @@ export const AppContextProvider = ({ children }) => {
 
     const [allCourses, setAllCourses] = useState([]);
     const [isEducator, setIsEducator] = useState(true);
+    const [enrolledCourses, setEnrolledCourses] = useState([])
 
     // fetch all courses
     useEffect(() => {
         setAllCourses(dummyCourses)
+        setEnrolledCourses(dummyCourses)
     }, [])
 
     //function to calculate avg rating of course
@@ -26,7 +28,7 @@ export const AppContextProvider = ({ children }) => {
         const time = chapter.chapterContent.reduce((acc, lecture) => acc + lecture.lectureDuration, 0);
         return humanizeDuration(time * 60 * 1000, { units: ['h', 'm'] });
     };
-    
+
     //function to calculate course duration
     const calculateCourseDuration = course => {
         let time = 0;
@@ -41,9 +43,13 @@ export const AppContextProvider = ({ children }) => {
                 totalLectures += chapter.chapterContent.length
             }
         })
-        return totalLectures
+        return totalLectures;
     }
 
+    //Fetxh user enrolled Courses
+    const fetchUserEnrolledCourses = async () => {
+
+    }
 
 
 
@@ -53,7 +59,8 @@ export const AppContextProvider = ({ children }) => {
         allCourses,
         calculateRating,
         isEducator, setIsEducator,
-        calculateChapterTime, calculateCourseDuration, calculateNoOfLectures
+        calculateChapterTime, calculateCourseDuration, calculateNoOfLectures,
+        enrolledCourses,
     }
     return (
         <appContext.Provider value={value}>
