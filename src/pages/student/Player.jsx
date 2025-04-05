@@ -6,6 +6,8 @@ import { useParams } from "react-router";
 import { assets } from "../../assets/assets";
 import humanizeDuration from "humanize-duration";
 import YouTube from "react-youtube";
+import Footer from "../../components/student/Footer";
+import Rating from "../../components/student/Rating";
 
 const Player = () => {
     const { enrolledCourses, calculateChapterTime } = useContext(appContext);
@@ -58,7 +60,7 @@ const Player = () => {
                                                             <p>{lecture.lectureTitle}</p>
                                                             <div className="flex gap-2">
                                                                 {lecture.lectureUrl && <p onClick={() => setPlayerData({
-                                                                    ...lecture, chapter: index + 1, lecture: index+1
+                                                                    ...lecture, chapter: index + 1, lecture: index + 1
                                                                 })} className="text-blue-500 cursor-pointer">Watch</p>}
                                                                 <p>{humanizeDuration(lecture.lectureDuration * 60 * 1000, { units: ['h', 'm'] })}</p>
                                                             </div>
@@ -71,6 +73,10 @@ const Player = () => {
                                 </div>
                             ))
                         }
+                    </div>
+                    <div className="flex items-center gap-2 py-3 mt-10">
+                        <h1 className="text-xl font-bold">Rate this Course</h1>
+                        <Rating initialRating={0} />
                     </div>
                 </div>
                 {/* Right Column */}
@@ -90,6 +96,7 @@ const Player = () => {
                     }
                 </div>
             </div>
+            <Footer />
         </>
     );
 };
