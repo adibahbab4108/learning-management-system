@@ -1,6 +1,8 @@
 import { useContext, useState } from "react";
 import appContext from "../../context/AppContext";
+import Footer from "../../components/student/Footer";
 import { useNavigate } from "react-router";
+import { Line } from "rc-progress";
 
 const MyEnrollments = () => {
     const { enrolledCourses, calculateCourseDuration } = useContext(appContext);
@@ -12,7 +14,7 @@ const MyEnrollments = () => {
         { lectureCompleted: 5, totalLectures: 8 },
     ])
 
-    const navigate =useNavigate()
+    const navigate = useNavigate()
     return (
         <>
             <div className="md:px-36 px-8 pt-10">
@@ -34,6 +36,7 @@ const MyEnrollments = () => {
                                         <img src={course.courseThumbnail} alt="" className="w-14 sm:w-24 md:w-28" />
                                         <div className="flex-1">
                                             <p className="mb-1 max-sm:text-sm">{course.courseTitle}</p>
+                                            <Line strokeWidth={2} percent={progressArray[index] ? (progressArray[index].lectureCompleted * 100) / (progressArray[index].totalLectures) : 0} className="bg-gray-3 rounded-full" />
                                         </div>
                                     </td>
                                     <td className="px-4 py-3 max-sm:hidden">
@@ -43,9 +46,9 @@ const MyEnrollments = () => {
                                         {progressArray[index] && `${progressArray[index].lectureCompleted} / ${progressArray[index].totalLectures}`} <span>Lectures</span>
                                     </td>
                                     <td className="px-4 py-3 max-sm:text-right">
-                                        <button onClick={()=> navigate('/player/'+course._id)} className="px-3 sm:px-5 py-1.5 sm:py-2 bg-blue-600 max-sm:text-xs text-white cursor-pointer">
+                                        <button onClick={() => navigate('/player/' + course._id)} className="px-3 sm:px-5 py-1.5 sm:py-2 bg-blue-600 max-sm:text-xs text-white cursor-pointer">
                                             {
-                                                progressArray[index] && progressArray[index].lectureCompleted/progressArray[index].totalLectures === 1 ? 'Completed' : "On going"
+                                                progressArray[index] && progressArray[index].lectureCompleted / progressArray[index].totalLectures === 1 ? 'Completed' : "On going"
                                             }
 
                                         </button>
@@ -56,6 +59,7 @@ const MyEnrollments = () => {
                     </tbody>
                 </table>
             </div>
+            <Footer/>
         </>
     );
 };
