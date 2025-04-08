@@ -4,23 +4,26 @@ import AuthContext from '../context/AuthContext';
 import { useNavigate } from 'react-router';
 
 const Register = () => {
-    const { user, setUser, signInUsingGoogle } = useContext(AuthContext)
+    const { setUser, signInUsingGoogle } = useContext(AuthContext)
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const navigate = useNavigate();
-    if (user) navigate('/')
+
     const handleRegister = (e) => {
         e.preventDefault();
         console.log('Registering:', { email, password });
-        // Add your registration logic here (e.g., Firebase auth)
     };
 
     const handleGoogleLogin = () => {
         signInUsingGoogle()
             .then(result => {
                 const user = result.user
-                setUser(user)
+                console.log(user)
+                if (user) {
+                    setUser(user)
+                    navigate('/')
+                }
             })
     };
 

@@ -1,14 +1,13 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-
 const firebaseConfig = {
-  apiKey: "AIzaSyBB1xEMGX6KoAxup5B_qq_KBvSY5GcB6o4",
-  authDomain: "learning-management-syst-430aa.firebaseapp.com",
-  projectId: "learning-management-syst-430aa",
-  storageBucket: "learning-management-syst-430aa.firebasestorage.app",
-  messagingSenderId: "644216665668",
-  appId: "1:644216665668:web:4757a8c843b6e176b96e11"
+  apiKey: import.meta.env.VITE_apiKey,
+  authDomain:  import.meta.env.VITE_authDomain,
+  projectId:  import.meta.env.VITE_projectId,
+  storageBucket:  import.meta.env.VITE_storageBucket,
+  messagingSenderId:  import.meta.env.VITE_messagingSenderId,
+  appId:  import.meta.env.VITE_appId
 };
 
 // Initialize Firebase

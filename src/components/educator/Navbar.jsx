@@ -11,8 +11,8 @@ const Navbar = () => {
             <Link to='/'>
                 <img src={assets.logo} alt="" className="w-28 lg:w-32" />
             </Link>
-            <div className="flex items-center gap-5 text-gray-500">
-                <p>H1!, {user ? user.fullName : 'Developers'}</p>
+            <div className="flex items-center gap-5 text-gray-500 relative">
+                <p>H1!, {user ? user.displayName : 'Developers'}</p>
                 {
                     user ? "Welcome" : <BiUser />
                 }
