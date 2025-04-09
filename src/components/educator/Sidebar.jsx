@@ -18,7 +18,7 @@ const Sidebar = () => {
                 <NavLink
                     to={item.path}
                     key={item.name}
-                    end={item.path==='/educator'}
+                    end={item.path === '/educator'}
                     className={({ isActive }) =>
                         `flex items-center gap-3 py-3.5 px-4 md:px-10 border-r-4 transition-all duration-200
                ${isActive
