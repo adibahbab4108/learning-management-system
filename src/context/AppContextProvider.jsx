@@ -9,7 +9,6 @@ export const AppContextProvider = ({ children }) => {
     const [allCourses, setAllCourses] = useState([]);
     const [isEducator, setIsEducator] = useState(true);
     const [enrolledCourses, setEnrolledCourses] = useState([])
-
     // fetch all courses
     useEffect(() => {
         setAllCourses(dummyCourses)
