@@ -32,7 +32,7 @@ const MyCourses = () => {
                     </thead>
                     <tbody>
                         {courses.map((course) => (
-                            <tr key={course._id} className="border-b hover:bg-gray-50">
+                            <tr key={course._id} className="border-b border-b-gray-300 hover:bg-gray-50">
                                 <td className="px-6 py-4 flex items-center gap-4">
                                     <img src={course.courseThumbnail} alt={course.courseTitle} className="w-14 h-14 rounded object-cover" />
                                     <span className="text-gray-800 font-medium text-sm">{course.courseTitle}</span>
