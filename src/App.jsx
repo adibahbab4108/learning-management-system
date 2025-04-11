@@ -13,6 +13,7 @@ import StudentsEnrolled from "./pages/educator/StudentsEnrolled"
 import Navbar from "./components/student/Navbar"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
+import "quill/dist/quill.snow.css";
 
 
 export const App = () => {
