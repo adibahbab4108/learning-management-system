@@ -101,7 +101,7 @@ const AddCourse = () => {
     };
 
     return (
-        <div className="h-screen overflow-scroll flex flex-col items-start justify-between md:p-8 pt-8 pb-0">
+        <div className="h-screen  overflow-scroll flex flex-col items-start justify-between p-4 md:p-8 pt-8 pb-0">
             <form onSubmit={handleSubmit} className="w-full space-y-4">
                 <div>
                     <p>Course Title</p>
@@ -110,7 +110,7 @@ const AddCourse = () => {
                         value={formData.courseTitle}
                         onChange={handleInputChange}
                         placeholder="Type here"
-                        className="input"
+                        className="border  px-2 py-1 rounded-sm border-gray-300"
                         type="text"
                         required
                     />
@@ -127,6 +127,7 @@ const AddCourse = () => {
                             value={formData.coursePrice}
                             onChange={handleInputChange}
                             type="number"
+                            className="border  px-2 py-1 rounded-sm border-gray-300"
                             required
                         />
                     </div>
@@ -147,7 +148,7 @@ const AddCourse = () => {
                         onChange={handleInputChange}
                         type="number"
                         placeholder="0"
-                        className="input w-28"
+                        className="border  px-2 py-1 rounded-sm border-gray-300"
                         required
                     />
                 </div>

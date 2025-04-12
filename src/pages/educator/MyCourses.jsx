@@ -19,7 +19,7 @@ const MyCourses = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 p-4 sm:p-6 md:p-10">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-6">My Courses</h2>
+            <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">My Courses</h2>
             <div className="overflow-x-auto bg-white shadow-md rounded-xl">
                 <table className="w-full table-auto">
                     <thead className="bg-gray-100 text-left text-sm text-gray-600 border-b">
@@ -27,7 +27,7 @@ const MyCourses = () => {
                             <th className="px-6 py-4">Course</th>
                             <th className="px-6 py-4">Earnings</th>
                             <th className="px-6 py-4">Students</th>
-                            <th className="px-6 py-4">Published On</th>
+                            <th className="px-6 py-4 ">Published On</th>
                         </tr>
                     </thead>
                     <tbody>
