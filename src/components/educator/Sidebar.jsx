@@ -21,7 +21,7 @@ const Sidebar = () => {
             {/* Toggle Button */}
             <button
                 onClick={handleSideBar}
-                className={`absolute -right-4 top-6 z-50 bg-white text-2xl p-1 rounded-full shadow transition-transform duration-300 ${!showSideBar ? 'rotate-180' : ''
+                className={`cursor-pointer absolute -right-4 top-6 z-50 bg-white text-2xl p-1 rounded-full shadow transition-transform duration-300 ${!showSideBar ? 'rotate-180 hover:rotate-0' : 'hover:rotate-180'
                     }`}
             >
                 <FaArrowRightFromBracket />
