@@ -14,6 +14,7 @@ import Navbar from "./components/student/Navbar"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
 import "quill/dist/quill.snow.css";
+import UserProfile from "./pages/UserProfile"
 
 
 export const App = () => {
@@ -32,6 +33,7 @@ export const App = () => {
         <Route path="/loading/:path" element={<Loading />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/profile" element={<UserProfile/>} />
         <Route path="/educator" element={<Educator />}>
           <Route index element={<Dashboard />} />
           <Route path="add-course" element={<AddCourse />} />
