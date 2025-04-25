@@ -10,7 +10,7 @@ const AuthContextProvider = ({ children }) => {
     console.log(user)
 
     const signInUsingGoogle = () => {
-        signInWithPopup(auth, provider)
+        return signInWithPopup(auth, provider)
     }
     const signUpUsingEmailAndPAssword = (email, password) => {
         return createUserWithEmailAndPassword(auth, email, password)
