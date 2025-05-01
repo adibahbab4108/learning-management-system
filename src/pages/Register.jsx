@@ -10,15 +10,20 @@ const API_URL = import.meta.env.VITE_API_BASE_URL;
 
 const sendUserToBackend = async (user) => {
   const userData = {
-    name: user.displayName || "Email User",
+    uid: user.uid,
+    fullName: user.displayName || "Email User",
     email: user.email,
     photoURL: user.photoURL || null,
-    creationTime: new Date().getTime(),
+    role: "user",
+    creationTime: user.metadata.creationTime,
   };
-
   try {
-    const response = await axios.post(`${API_URL}/users/register`, userData);
-    return response.data;
+    const { data } = await axios.post(
+      `${API_URL}/users/google-login`,
+      userData
+    );
+    console.log(data);
+    return data;
   } catch (error) {
     console.error("❌ Backend Error:", error);
     throw error;
@@ -39,7 +44,7 @@ const Register = () => {
     e.preventDefault();
     setErrorMsg("");
     return alert(
-      "Please try with Google Login. This feature will be updated soon!"
+      "Please try with Google Login. This feature will be availabe soon!"
     );
     if (!email || !password) {
       setErrorMsg("Email and Password are required");
@@ -67,6 +72,7 @@ const Register = () => {
 
       if (user) {
         setUser(user);
+        await sendUserToBackend(user);
         navigate("/");
       }
     } catch (error) {
