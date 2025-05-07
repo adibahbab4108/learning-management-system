@@ -22,11 +22,15 @@ const sendUserToBackend = async (user) => {
       `${API_URL}/users/google-login`,
       userData
     );
-    console.log(data);
     return data;
   } catch (error) {
-    console.error("❌ Backend Error:", error);
-    throw error;
+   if (error.response && error.response.status === 409) {
+      console.warn("⚠️ User already exists. Proceeding with login instead...");
+      return { message: "User already exists. Proceeding with login." };
+    } else {
+      console.error("❌ Backend Error:", error);
+      return { message: "Something went wrong. Please try again later." };
+    }
   }
 };
 
@@ -67,12 +71,12 @@ const Register = () => {
 
   const handleGoogleLogin = async () => {
     try {
-      const result = await signInUsingGoogle();
-      const user = result.user;
-
+      const { user } = await signInUsingGoogle();
       if (user) {
         setUser(user);
-        await sendUserToBackend(user);
+        console.log(user);
+        const response = await sendUserToBackend(user);
+        console.log(response);
         navigate("/");
       }
     } catch (error) {

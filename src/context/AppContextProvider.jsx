@@ -7,7 +7,7 @@ export const AppContextProvider = ({ children }) => {
     const currency = import.meta.env.VITE_CURRENCY;
 
     const [allCourses, setAllCourses] = useState([]);
-    const [isEducator, setIsEducator] = useState(true);
+    const [isEducator, setIsEducator] = useState(false);
     const [enrolledCourses, setEnrolledCourses] = useState([])
     // fetch all courses
     useEffect(() => {
@@ -44,8 +44,9 @@ export const AppContextProvider = ({ children }) => {
         })
         return totalLectures;
     }
+    
 
-    //Fetxh user enrolled Courses
+    //Fetch user enrolled Courses
     const fetchUserEnrolledCourses = async () => {
 
     }
