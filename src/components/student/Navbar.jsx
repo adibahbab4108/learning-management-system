@@ -2,14 +2,53 @@ import { useContext } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import AuthContext from "../../context/AuthContext";
 import { FaUser } from "react-icons/fa";
+import Swal from "sweetalert2";
 import appContext from "../../context/AppContext";
+import axios from "axios";
+
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_BASE_URL;
   const { user, logOut } = useContext(AuthContext);
-  const { isEducator } = useContext(appContext);
-
+  const { isEducator, setIsEducator } = useContext(appContext);
   const isCourseListPage = location.pathname.includes("/course-list");
+console.log(isEducator)
+  const handleBecomeEducator = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Become an Educator?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+      cancelButtonText: "No, Thank You",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .patch(`${API_URL}/users/${user.email}/update-role`)
+          .then((res) => {
+            console.log(res);
+            setIsEducator(true)
+            Swal.fire({
+              title: "Congratulations!",
+              text: "You are now an educator.",
+              icon: "success",
+            });
+          })
+          .catch((error) => {
+            console.error("Error updating role:", error);
+            Swal.fire({
+              title: "Oops!",
+              text: "Something went wrong. Please try again.",
+              icon: "error",
+            });
+          });
+      }
+    });
+  };
+
   return (
     <div
       className={`flex items-center justify-between px-4 sm:px-10 
@@ -31,7 +70,13 @@ const Navbar = () => {
                   Educator Dashboard
                 </button>
               ) : (
-                <button   className="cursor-pointer"> Become Educator</button>
+                <button
+                  onClick={handleBecomeEducator}
+                  className="cursor-pointer"
+                >
+                  {" "}
+                  Become Educator
+                </button>
               )}
               <Link to="/my-enrollments">My Enrollments</Link>
             </div>
