@@ -13,7 +13,7 @@ const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
   const { isEducator, setIsEducator } = useContext(appContext);
   const isCourseListPage = location.pathname.includes("/course-list");
-console.log(isEducator)
+  console.log(isEducator);
   const handleBecomeEducator = () => {
     Swal.fire({
       title: "Are you sure?",
@@ -30,7 +30,7 @@ console.log(isEducator)
           .patch(`${API_URL}/users/${user.email}/update-role`)
           .then((res) => {
             console.log(res);
-            setIsEducator(true)
+            setIsEducator(true);
             Swal.fire({
               title: "Congratulations!",
               text: "You are now an educator.",

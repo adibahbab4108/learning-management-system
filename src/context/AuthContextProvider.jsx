@@ -15,10 +15,6 @@ const provider = new GoogleAuthProvider();
 const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  if (!loading) {
-    console.log(new Date().toDateString(user.metadata.createdAt));
-    console.log(user?.metadata);
-  }
 
   const signInUsingGoogle = () => {
     return signInWithPopup(auth, provider);
