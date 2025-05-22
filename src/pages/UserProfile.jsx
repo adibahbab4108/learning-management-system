@@ -25,7 +25,12 @@ const UserProfile = () => {
               className="w-36 h-36 bg-green-300"
               alt="Profile"
             />
-            <div className="absolute bg-white/60 opacity-0 -bottom-11 group-hover:bottom-0 group-hover:opacity-100 hover:bg-white transition-all ease-out duration-700">
+            <div className="absolute bg-white/60 opacity-0 -bottom-11 
+            group-hover:bottom-0 
+            group-hover:opacity-100 
+            hover:bg-white 
+            transition-all ease-out duration-700
+            ">
               <label
                 htmlFor="upload-img"
                 className="w-36 inline-block text-center py-1  rounded cursor-pointer"

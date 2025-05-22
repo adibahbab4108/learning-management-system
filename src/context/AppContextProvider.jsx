@@ -26,7 +26,6 @@ export const AppContextProvider = ({ children }) => {
       }
     }
   };
-  console.log(dbUser);
   useEffect(() => {
     fetchUser();
   }, [user]);
