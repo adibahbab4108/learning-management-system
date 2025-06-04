@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Link, useLocation, useNavigate } from "react-router";
+import { Link,useNavigate } from "react-router";
 import AuthContext from "../../context/AuthContext";
 import { FaUser } from "react-icons/fa";
 import Swal from "sweetalert2";
@@ -7,12 +7,10 @@ import appContext from "../../context/AppContext";
 import axios from "axios";
 
 const Navbar = () => {
-  const location = useLocation();
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_BASE_URL;
   const { user, logOut } = useContext(AuthContext);
   const { isEducator, setIsEducator } = useContext(appContext);
-  const isCourseListPage = location.pathname.includes("/course-list");
   console.log(isEducator);
   const handleBecomeEducator = () => {
     Swal.fire({
@@ -53,7 +51,7 @@ const Navbar = () => {
     <div
       className={`flex items-center justify-between px-4 sm:px-10 
             md:px-14 lg:px-36  border-b border-gray-500 py-4
-          ${isCourseListPage ? "bg-white" : "bg-cyan-100/70"}`}
+          `}
     >
       <h2 onClick={() => navigate("/")} className="text-2xl cursor-pointer">
         EduNest

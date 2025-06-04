@@ -7,13 +7,13 @@ import { uploadImage } from "../../utilities/utilities";
 const API_URL = import.meta.env.VITE_API_BASE_URL;
 const AddCourse = () => {
   const quillRef = useRef(null);
-  const editorRef = useRef(null);
+  const editorDivRef = useRef(null);
 
   const [formData, setFormData] = useState({
     courseTitle: "",
     coursePrice: 0,
     discount: 0,
-    image: null,
+    courseThumbnail: null,
   });
 
   const [chapters, setChapters] = useState([]);
@@ -27,8 +27,8 @@ const AddCourse = () => {
   });
 
   useEffect(() => {
-    if (!quillRef.current && editorRef.current) {
-      quillRef.current = new Quill(editorRef.current, { theme: "snow" });
+    if (!quillRef.current && editorDivRef.current) {
+      quillRef.current = new Quill(editorDivRef.current, { theme: "snow" });
     }
   }, []);
 
@@ -38,12 +38,10 @@ const AddCourse = () => {
 
     if (type === "file") {
       if (files.length > 0) {
-        const data = await uploadImage(files[0]);
-        console.log("from addcourse", data);
         val = files[0]; // Store the file object for preview
       }
     } else {
-      val = value; // Assign regular input value
+      val = value;
     }
 
     setFormData((prev) => ({ ...prev, [name]: val }));
@@ -127,15 +125,22 @@ const AddCourse = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle submission logic here
+    const uploadedImg = e.target.courseThumbnail.files[0];
+
+    const imgData = await uploadImage(uploadedImg);
+    // console.log("from addcourse", imgData.display_url);
+    setFormData({
+      ...formData,
+      descriptionHTML: quillRef.current.root.innerHTML,
+      courseThumbnail: imgData.display_url,
+    });
+
     const { data } = await axios.post(
       `${API_URL}/educator/add-course`,
       formData
     );
     console.log(data);
-    return data;
   };
-  console.log("formData", formData, "chapters", chapters);
   return (
     <div className="h-screen  overflow-scroll flex flex-col items-start justify-between p-4 md:p-8 pt-8 pb-0">
       <form onSubmit={handleSubmit} className="w-full space-y-4">
@@ -153,7 +158,7 @@ const AddCourse = () => {
         </div>
         <div>
           <p>Course Description</p>
-          <div ref={editorRef} className="bg-white border p-2 rounded" />
+          <div ref={editorDivRef} className="bg-white border p-2 rounded" />
         </div>
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
@@ -179,14 +184,14 @@ const AddCourse = () => {
             <input
               type="file"
               id="thumbnailImage"
-              name="image"
+              name="courseThumbnail"
               onChange={handleInputChange}
               accept="image/*"
               hidden
             />
-            {formData.image && (
+            {formData.courseThumbnail && (
               <img
-                src={URL.createObjectURL(formData.image)}
+                src={formData.courseThumbnail}
                 className="max-h-10"
                 alt="Preview"
               />
@@ -210,6 +215,7 @@ const AddCourse = () => {
             <div key={chapter.chapterId}>
               <div className="flex justify-between items-center p-4 border-b">
                 <div className="flex items-center">
+                  {/* Toggling chapters */}
                   <img
                     onClick={() => handleChapter("toggle", chapter.chapterId)}
                     className={`mr-2 cursor-pointer transition-all ${
@@ -224,6 +230,7 @@ const AddCourse = () => {
                   </span>
                 </div>
                 <span>{chapter.chapterContent.length} Lectures</span>
+                {/* remove chapter */}
                 <img
                   onClick={() => handleChapter("remove", chapter.chapterId)}
                   src={assets.cross_icon}
@@ -390,7 +397,7 @@ const AddCourse = () => {
 
         <button
           type="submit"
-          className="bg-green-600 text-white py-2 px-4 rounded"
+          className="bg-green-600 text-white py-2 px-4 rounded cursor-pointer"
         >
           Submit Course
         </button>
