@@ -4,8 +4,12 @@ import uniqid from "uniqid";
 import { assets } from "../../assets/assets";
 import axios from "axios";
 import { uploadImage } from "../../utilities/utilities";
+import { useContext } from "react";
+import AuthContext from "../../context/AuthContext";
 const API_URL = import.meta.env.VITE_API_BASE_URL;
 const AddCourse = () => {
+  const { user } = useContext(AuthContext);
+  console.log(user?.email);
   const quillRef = useRef(null);
   const editorDivRef = useRef(null);
 
@@ -13,10 +17,11 @@ const AddCourse = () => {
     courseTitle: "",
     coursePrice: 0,
     discount: 0,
-    courseThumbnail: null,
   });
 
   const [chapters, setChapters] = useState([]);
+  const [imgLoading, setImgLoading] = useState(false);
+  const [imgUrl, setImgUrl] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const [currentChapterId, setCurrentChapterId] = useState(null);
   const [lectureDetails, setLectureDetails] = useState({
@@ -39,6 +44,20 @@ const AddCourse = () => {
     if (type === "file") {
       if (files.length > 0) {
         val = files[0]; // Store the file object for preview
+        setImgLoading(true);
+        
+        try {
+          const uploadedImg = await uploadImage(val);
+          if (uploadedImg.display_url) {
+            setImgUrl(uploadedImg.display_url);
+          } else {
+            console.error("Image upload failed");
+          }
+        } catch (err) {
+          console.error("Image upload error:", err);
+        } finally {
+          setImgLoading(false);
+        }
       }
     } else {
       val = value;
@@ -125,22 +144,28 @@ const AddCourse = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const uploadedImg = e.target.courseThumbnail.files[0];
 
-    const imgData = await uploadImage(uploadedImg);
-    // console.log("from addcourse", imgData.display_url);
-    setFormData({
+    const courseData = {
       ...formData,
       descriptionHTML: quillRef.current.root.innerHTML,
-      courseThumbnail: imgData.display_url,
-    });
+      courseThumbnail: imgUrl || formData.courseThumbnail,
+      userEmail: user?.email,
+    };
+    console.log(courseData);
 
-    const { data } = await axios.post(
-      `${API_URL}/educator/add-course`,
-      formData
-    );
-    console.log(data);
+    if (!imgLoading) {
+      try {
+        const { data } = await axios.post(
+          `${API_URL}/educator/add-course`,
+          courseData
+        );
+        console.log("Course submitted:", data);
+      } catch (error) {
+        console.error("Submit failed:", error);
+      }
+    }
   };
+
   return (
     <div className="h-screen  overflow-scroll flex flex-col items-start justify-between p-4 md:p-8 pt-8 pb-0">
       <form onSubmit={handleSubmit} className="w-full space-y-4">
@@ -173,7 +198,7 @@ const AddCourse = () => {
             />
           </div>
           <div className="flex items-center gap-2">
-            <p>Course Thumbnail</p>
+            <p>{imgLoading ? "Uploading..." : "Thumbnail"}</p>
             <label htmlFor="thumbnailImage" className="cursor-pointer">
               <img
                 src={assets.file_upload_icon}
@@ -189,13 +214,7 @@ const AddCourse = () => {
               accept="image/*"
               hidden
             />
-            {formData.courseThumbnail && (
-              <img
-                src={formData.courseThumbnail}
-                className="max-h-10"
-                alt="Preview"
-              />
-            )}
+            {imgUrl && <img src={imgUrl} className="max-h-10" alt="Preview" />}
           </div>
         </div>
         <div>
@@ -401,6 +420,7 @@ const AddCourse = () => {
         >
           Submit Course
         </button>
+        {imgLoading && <h2>Loading..</h2>}
       </form>
     </div>
   );
