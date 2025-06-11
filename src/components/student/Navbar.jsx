@@ -11,7 +11,7 @@ const Navbar = () => {
   const API_URL = import.meta.env.VITE_API_BASE_URL;
   const { user, logOut } = useContext(AuthContext);
   const { isEducator, setIsEducator } = useContext(appContext);
-  console.log(isEducator);
+
   const handleBecomeEducator = () => {
     Swal.fire({
       title: "Are you sure?",

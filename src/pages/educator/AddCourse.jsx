@@ -45,7 +45,7 @@ const AddCourse = () => {
       if (files.length > 0) {
         val = files[0]; // Store the file object for preview
         setImgLoading(true);
-        
+
         try {
           const uploadedImg = await uploadImage(val);
           if (uploadedImg.display_url) {
@@ -144,7 +144,14 @@ const AddCourse = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
+    if (
+      !formData.courseThumbnail ||
+      !(formData.courseThumbnail instanceof File)
+    ) {
+      alert("Please select a thumbnail image.");
+      return;
+    }
     const courseData = {
       ...formData,
       descriptionHTML: quillRef.current.root.innerHTML,

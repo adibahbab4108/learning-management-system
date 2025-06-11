@@ -14,23 +14,23 @@ const sendUserToBackend = async (user) => {
     fullName: user.displayName || "Email User",
     email: user.email,
     photoURL: user.photoURL || null,
-    role: "user",
-    creationTime: user.metadata.creationTime,
   };
+
   try {
     const { data } = await axios.post(
       `${API_URL}/users/google-login`,
-      userData
+      userData,
+      {
+        headers: {
+          Authorization: `Bearer ${user.accessToken}`,
+        },
+        withCredentials: true,
+      }
     );
     return data;
   } catch (error) {
-   if (error.response && error.response.status === 409) {
-      console.warn("⚠️ User already exists. Proceeding with login instead...");
-      return { message: "User already exists. Proceeding with login." };
-    } else {
-      console.error("❌ Backend Error:", error);
-      return { message: "Something went wrong. Please try again later." };
-    }
+    console.error("❌ Backend Error:", error);
+    return { message: "Something went wrong. Please try again later." };
   }
 };
 

@@ -25,6 +25,7 @@ const AuthContextProvider = ({ children }) => {
   const signInUsingEmailAndPAssword = (email, password) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
+
   const logOut = async () => {
     try {
       await signOut(auth);

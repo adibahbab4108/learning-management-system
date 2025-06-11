@@ -5,6 +5,7 @@ import { dummyCourses } from "../assets/assets";
 import humanizeDuration from "humanize-duration";
 import axios from "axios";
 import AuthContext from "./AuthContext";
+
 export const AppContextProvider = ({ children }) => {
   const currency = import.meta.env.VITE_CURRENCY;
   const API_URL = import.meta.env.VITE_API_BASE_URL;
@@ -14,19 +15,23 @@ export const AppContextProvider = ({ children }) => {
   const { user } = useContext(AuthContext);
   const [dbUser, setDbUser] = useState(null);
 
-  const fetchUser = async () => {
-    if (user) {
-      try {
-        const { data } = await axios.get(`${API_URL}/users/${user.email}`);
-        setDbUser(data.data);
-        if (data.data.role === "educator") setIsEducator(true);
-        else setIsEducator(false);
-      } catch (error) {
-        console.error("Failed to fetch user:", error.message);
-      }
-    }
-  };
+  //fetching saved user data from mongo
   useEffect(() => {
+    if (!user) return;
+    const fetchUser = async () => {
+      if (user) {
+        try {
+          const { data } = await axios.get(`${API_URL}/users/user-details`, {
+            withCredentials: true,
+          });
+          setDbUser(data.data);
+          if (data.data.role === "educator") setIsEducator(true);
+          else setIsEducator(false);
+        } catch (error) {
+          console.error("Failed to fetch user:", error.message);
+        }
+      }
+    };
     fetchUser();
   }, [user]);
 
