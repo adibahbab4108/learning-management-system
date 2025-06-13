@@ -1,44 +1,75 @@
 /* eslint-disable no-unused-vars */
 import { useContext, useEffect, useState } from "react";
 import appContext from "./AppContext";
-import { dummyCourses } from "../assets/assets";
 import humanizeDuration from "humanize-duration";
 import axios from "axios";
 import AuthContext from "./AuthContext";
+import { toast } from "react-toastify";
 
 export const AppContextProvider = ({ children }) => {
   const currency = import.meta.env.VITE_CURRENCY;
   const API_URL = import.meta.env.VITE_API_BASE_URL;
+
   const [allCourses, setAllCourses] = useState([]);
   const [isEducator, setIsEducator] = useState(false);
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const { user } = useContext(AuthContext);
-  const [dbUser, setDbUser] = useState(null);
+  const [userData, setUserData] = useState(null);
 
-  //fetching saved user data from mongo
-  useEffect(() => {
-    if (!user) return;
-    const fetchUser = async () => {
-      if (user) {
-        try {
-          const { data } = await axios.get(`${API_URL}/users/user-details`, {
-            withCredentials: true,
-          });
-          setDbUser(data.data);
-          if (data.data.role === "educator") setIsEducator(true);
-          else setIsEducator(false);
-        } catch (error) {
-          console.error("Failed to fetch user:", error.message);
-        }
-      }
-    };
-    fetchUser();
-  }, [user]);
+  //fetch user data from mongo
+  const fetchUser = async () => {
+    try {
+      const { data } = await axios.get(`${API_URL}/user/user-details`, {
+        withCredentials: true,
+      });
+      console.log(data);
+      if (data.success && data.data) {
+        setUserData(data.data);
+        setIsEducator(data.data.role === "educator");
+      } else toast.error(data.message);
+    } catch (error) {
+      console.error("Failed to fetch user:", error.message);
+    }
+  };
 
   // fetch all courses
+  const fetchAllCourses = async () => {
+    try {
+      const { data } = await axios.get(`${API_URL}/course/all`);
+      if (data.success) {
+        setAllCourses(data.courses);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const fetchUserEnrolledCourses = async () => {
+    try {
+      const { data } = await axios.get(API_URL + "/user/enrolled-courses", {
+        withCredentials: true,
+      });
+      if (data.success) {
+        setEnrolledCourses(data.enrolledCourses.reverse());
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   useEffect(() => {
-    setAllCourses(dummyCourses);
-    setEnrolledCourses(dummyCourses);
+    if (user) {
+      fetchUser();
+      fetchUserEnrolledCourses();
+    }
+  }, [user]);
+
+  useEffect(() => {
+    fetchAllCourses();
   }, []);
 
   //function to calculate avg rating of course
@@ -48,7 +79,7 @@ export const AppContextProvider = ({ children }) => {
       (sum, { rating }) => sum + rating,
       0
     );
-    return totalRating / course.courseRatings.length;
+    return Math.floor(totalRating / course.courseRatings.length);
   };
 
   //function to calculate course chapter time
@@ -79,13 +110,12 @@ export const AppContextProvider = ({ children }) => {
     return totalLectures;
   };
 
-  //Fetch user enrolled Courses
-  const fetchUserEnrolledCourses = async () => {};
-
   const value = {
-    dbUser,
+    userData,
     currency,
     allCourses,
+    fetchAllCourses,
+    fetchUserEnrolledCourses,
     calculateRating,
     isEducator,
     setIsEducator,
@@ -93,6 +123,7 @@ export const AppContextProvider = ({ children }) => {
     calculateCourseDuration,
     calculateNoOfLectures,
     enrolledCourses,
+    API_URL,
   };
   return <appContext.Provider value={value}>{children}</appContext.Provider>;
 };

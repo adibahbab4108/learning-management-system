@@ -15,10 +15,9 @@ const sendUserToBackend = async (user) => {
     email: user.email,
     photoURL: user.photoURL || null,
   };
-
   try {
     const { data } = await axios.post(
-      `${API_URL}/users/google-login`,
+      `${API_URL}/user/google-login`,
       userData,
       {
         headers: {
@@ -27,6 +26,7 @@ const sendUserToBackend = async (user) => {
         withCredentials: true,
       }
     );
+    console.log(data);
     return data;
   } catch (error) {
     console.error("❌ Backend Error:", error);
@@ -74,9 +74,8 @@ const Register = () => {
       const { user } = await signInUsingGoogle();
       if (user) {
         setUser(user);
-        console.log(user);
         const response = await sendUserToBackend(user);
-        console.log(response);
+
         navigate("/");
       }
     } catch (error) {

@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Link,useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import AuthContext from "../../context/AuthContext";
 import { FaUser } from "react-icons/fa";
 import Swal from "sweetalert2";
@@ -25,9 +25,12 @@ const Navbar = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .patch(`${API_URL}/users/${user.email}/update-role`)
-          .then((res) => {
-            console.log(res);
+          .patch(
+            `${API_URL}/user/update-role`,
+            { role: "educator" },
+            { withCredentials: true }
+          )
+          .then(() => {
             setIsEducator(true);
             Swal.fire({
               title: "Congratulations!",

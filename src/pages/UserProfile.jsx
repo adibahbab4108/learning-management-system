@@ -49,6 +49,7 @@ const UserProfile = () => {
             </div>
           </div>
           <h2 className="text-xl font-semibold my-3">{user.displayName}</h2>
+          <h4>{user.email}</h4>
         </div>
       </div>
     </div>

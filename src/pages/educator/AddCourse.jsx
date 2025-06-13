@@ -4,12 +4,10 @@ import uniqid from "uniqid";
 import { assets } from "../../assets/assets";
 import axios from "axios";
 import { uploadImage } from "../../utilities/utilities";
-import { useContext } from "react";
-import AuthContext from "../../context/AuthContext";
-const API_URL = import.meta.env.VITE_API_BASE_URL;
+
 const AddCourse = () => {
-  const { user } = useContext(AuthContext);
-  console.log(user?.email);
+  const API_URL = import.meta.env.VITE_API_BASE_URL;
+  
   const quillRef = useRef(null);
   const editorDivRef = useRef(null);
 
@@ -144,7 +142,7 @@ const AddCourse = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (
       !formData.courseThumbnail ||
       !(formData.courseThumbnail instanceof File)
@@ -156,15 +154,14 @@ const AddCourse = () => {
       ...formData,
       descriptionHTML: quillRef.current.root.innerHTML,
       courseThumbnail: imgUrl || formData.courseThumbnail,
-      userEmail: user?.email,
     };
-    console.log(courseData);
 
     if (!imgLoading) {
       try {
         const { data } = await axios.post(
           `${API_URL}/educator/add-course`,
-          courseData
+          courseData,
+          { withCredentials: true }
         );
         console.log("Course submitted:", data);
       } catch (error) {
