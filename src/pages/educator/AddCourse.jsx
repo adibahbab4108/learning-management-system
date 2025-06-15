@@ -4,10 +4,11 @@ import uniqid from "uniqid";
 import { assets } from "../../assets/assets";
 import axios from "axios";
 import { uploadImage } from "../../utilities/utilities";
+import { toast } from "react-toastify";
 
 const AddCourse = () => {
   const API_URL = import.meta.env.VITE_API_BASE_URL;
-  
+
   const quillRef = useRef(null);
   const editorDivRef = useRef(null);
 
@@ -163,9 +164,9 @@ const AddCourse = () => {
           courseData,
           { withCredentials: true }
         );
-        console.log("Course submitted:", data);
+        data.success ? toast.success(data.message) : toast.error(data.message);
       } catch (error) {
-        console.error("Submit failed:", error);
+        toast.error("Submit failed:", error.message);
       }
     }
   };

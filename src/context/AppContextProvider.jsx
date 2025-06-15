@@ -22,10 +22,10 @@ export const AppContextProvider = ({ children }) => {
       const { data } = await axios.get(`${API_URL}/user/user-details`, {
         withCredentials: true,
       });
-      console.log(data);
-      if (data.success && data.data) {
-        setUserData(data.data);
-        setIsEducator(data.data.role === "educator");
+      console.log(data.userDetails);
+      if (data.success && data.userDetails) {
+        setUserData(data.userDetails);
+        setIsEducator(data.userDetails.role === "educator");
       } else toast.error(data.message);
     } catch (error) {
       console.error("Failed to fetch user:", error.message);

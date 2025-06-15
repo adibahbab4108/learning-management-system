@@ -33,6 +33,7 @@ const CourseDetails = () => {
   const fetchCourseData = async () => {
     try {
       const { data } = await axios.get(`${backendUrl}/course/${id}`);
+      console.log(data)
       data.success ? setCourseData(data.courseData) : toast.error(data.message);
     } catch (error) {
       toast.error(error.message);
@@ -61,7 +62,7 @@ const CourseDetails = () => {
       toast.error(error.message);
     }
   };
-  console.log(courseData, userData);
+  console.log(courseData);
   const rating = Math.floor(calculateRating(courseData));
 
   useEffect(() => {

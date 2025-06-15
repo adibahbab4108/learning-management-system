@@ -21,12 +21,13 @@ const sendUserToBackend = async (user) => {
       userData,
       {
         headers: {
-          Authorization: `Bearer ${user.accessToken}`,
+          Authorization: `Bearer ${user.getIdToken()}`,
         },
         withCredentials: true,
       }
     );
     console.log(data);
+    
     return data;
   } catch (error) {
     console.error("❌ Backend Error:", error);
@@ -79,7 +80,6 @@ const Register = () => {
         navigate("/");
       }
     } catch (error) {
-      console.error(error);
       setErrorMsg("Google login failed.");
     }
   };
