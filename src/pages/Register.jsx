@@ -5,6 +5,8 @@ import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router";
 import AuthContext from "../context/AuthContext";
 import axios from "axios";
+import { signOut } from "firebase/auth";
+import { toast } from "react-toastify";
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -15,26 +17,27 @@ const sendUserToBackend = async (user) => {
     email: user.email,
     photoURL: user.photoURL || null,
   };
+  const token = await user.getIdToken();
   try {
     const { data } = await axios.post(
       `${API_URL}/user/google-login`,
       userData,
       {
         headers: {
-          Authorization: `Bearer ${user.getIdToken()}`,
+          Authorization: `Bearer ${token}`,
         },
         withCredentials: true,
       }
     );
     console.log(data);
-    
+
     return data;
   } catch (error) {
-    console.error("❌ Backend Error:", error);
+    toast.error(error.response.statusText);
+//Logout handle
     return { message: "Something went wrong. Please try again later." };
   }
 };
-
 const Register = () => {
   const { setUser, signInUsingGoogle } = useContext(AuthContext);
   const [fullName, setFullName] = useState("");

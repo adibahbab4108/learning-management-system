@@ -5,6 +5,7 @@ import humanizeDuration from "humanize-duration";
 import axios from "axios";
 import AuthContext from "./AuthContext";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
 
 export const AppContextProvider = ({ children }) => {
   const currency = import.meta.env.VITE_CURRENCY;
@@ -13,8 +14,9 @@ export const AppContextProvider = ({ children }) => {
   const [allCourses, setAllCourses] = useState([]);
   const [isEducator, setIsEducator] = useState(false);
   const [enrolledCourses, setEnrolledCourses] = useState([]);
-  const { user } = useContext(AuthContext);
+  const { user, logOut } = useContext(AuthContext);
   const [userData, setUserData] = useState(null);
+  const navigate = useNavigate();
 
   //fetch user data from mongo
   const fetchUser = async () => {
@@ -28,7 +30,12 @@ export const AppContextProvider = ({ children }) => {
         setIsEducator(data.userDetails.role === "educator");
       } else toast.error(data.message);
     } catch (error) {
-      console.error("Failed to fetch user:", error.message);
+      if (error.response?.status) {
+        toast.error("Please Login again");
+        navigate("/register");
+        await logOut();
+        return;
+      }
     }
   };
 
@@ -85,7 +92,7 @@ export const AppContextProvider = ({ children }) => {
   //function to calculate course chapter time
   const calculateChapterTime = (chapter) => {
     const time = chapter.chapterContent.reduce(
-      (acc, lecture) => acc + lecture.lectureDuration,
+      (acc, lecture) => acc + Number(lecture?.lectureDuration || 0),
       0
     );
     return humanizeDuration(time * 60 * 1000, { units: ["h", "m"] });
@@ -97,6 +104,7 @@ export const AppContextProvider = ({ children }) => {
     course.courseContent.map((chapter) =>
       chapter.chapterContent.map((lecture) => (time += lecture.lectureDuration))
     );
+
     return humanizeDuration(time * 60 * 1000, { units: ["h", "m"] });
   };
   //function to calculate number of lectures

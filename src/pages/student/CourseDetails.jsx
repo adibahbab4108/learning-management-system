@@ -11,6 +11,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const CourseDetails = () => {
+  // Decleration..................................
   const backendUrl = import.meta.env.VITE_API_BASE_URL;
 
   const { id } = useParams();
@@ -30,10 +31,45 @@ const CourseDetails = () => {
     userData,
   } = useContext(appContext);
 
+  // Components..................................
+  const lectureContent = (lecture) => {
+    
+    return (
+      <>
+        <img src={assets.play_icon} alt="play icon" className="w-4 h-4 mt-1" />
+        <div className="flex items-center justify-between w-full text-gray-800 text-xs md:text-base">
+          <p>{lecture.lectureTitle}</p>
+          <div className="flex gap-2">
+            {lecture.isPreviewFree ? (
+              <p
+                onClick={() =>
+                  setPlayerData({
+                    videoId: lecture.lectureUrl.split("/").pop(),
+                  })
+                }
+                className="text-blue-500 cursor-pointer"
+              >
+                Preview
+              </p>
+            ) : (
+              ""
+            )}
+            <p>
+              {humanizeDuration(lecture.lectureDuration * 60 * 1000, {
+                units: ["h", "m"],
+              })}
+            </p>
+          </div>
+        </div>
+      </>
+    );
+  };
+
+  // Functions...............................................
   const fetchCourseData = async () => {
     try {
       const { data } = await axios.get(`${backendUrl}/course/${id}`);
-      console.log(data)
+      console.log(data);
       data.success ? setCourseData(data.courseData) : toast.error(data.message);
     } catch (error) {
       toast.error(error.message);
@@ -62,6 +98,7 @@ const CourseDetails = () => {
       toast.error(error.message);
     }
   };
+
   console.log(courseData);
   const rating = Math.floor(calculateRating(courseData));
 
@@ -161,36 +198,7 @@ const CourseDetails = () => {
                     <ul className="list-disc md:pl-10 pl-4 pr-4 py-2 text-gray-600 border-t border-gray-300">
                       {chapter.chapterContent.map((lecture, index) => (
                         <li key={index} className="flex items-start gap-2 py-1">
-                          <img
-                            src={assets.play_icon}
-                            alt="play icon"
-                            className="w-4 h-4 mt-1"
-                          />
-                          <div className="flex items-center justify-between w-full text-gray-800 text-xs md:text-base">
-                            <p>{lecture.lectureTitle}</p>
-                            <div className="flex gap-2">
-                              {lecture.isPreviewFree && (
-                                <p
-                                  onClick={() =>
-                                    setPlayerData({
-                                      videoId: lecture.lectureUrl
-                                        .split("/")
-                                        .pop(),
-                                    })
-                                  }
-                                  className="text-blue-500 cursor-pointer"
-                                >
-                                  Preview
-                                </p>
-                              )}
-                              <p>
-                                {humanizeDuration(
-                                  lecture.lectureDuration * 60 * 1000,
-                                  { units: ["h", "m"] }
-                                )}
-                              </p>
-                            </div>
-                          </div>
+                          {lectureContent(lecture)}
                         </li>
                       ))}
                     </ul>
@@ -235,8 +243,9 @@ const CourseDetails = () => {
                   (courseData.discount * courseData.coursePrice) / 100
                 ).toFixed(2)}
               </p>
-              <p className="text-lg text-gray-500 line-through">
-                {currency} {courseData.coursePrice}
+              <p className="text-lg text-gray-500 ">
+                {currency}{" "}
+                <span className="line-through">{courseData.coursePrice}</span>                
               </p>
               <p className="md:text-lg text-gray-500">
                 {courseData.discount}% off
