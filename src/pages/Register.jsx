@@ -8,7 +8,7 @@ import axios from "axios";
 import { signOut } from "firebase/auth";
 import { toast } from "react-toastify";
 
-const API_URL = import.meta.env.VITE_API_BASE_URL;
+const backendUrl = import.meta.env.VITE_API_BASE_URL;
 
 const sendUserToBackend = async (user) => {
   const userData = {
@@ -20,7 +20,7 @@ const sendUserToBackend = async (user) => {
   const token = await user.getIdToken();
   try {
     const { data } = await axios.post(
-      `${API_URL}/user/google-login`,
+      `${backendUrl}/user/google-login`,
       userData,
       {
         headers: {

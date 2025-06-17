@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import appContext from "../../context/AppContext";
 import { useParams } from "react-router";
 import { assets } from "../../assets/assets";
@@ -10,6 +10,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Loading from "../../components/student/Loading";
 
+//After user purchase page..........................
 const Player = () => {
   const { courseId } = useParams();
   const backendUrl = import.meta.env.VITE_API_BASE_URL;
@@ -33,7 +34,7 @@ const Player = () => {
       [index]: !prev[index],
     }));
   };
-  const getCourseData = useCallback(() => {
+  const getCourseData = () => {
     enrolledCourses.forEach((course) => {
       if (course._id === courseId) {
         setCourseData(course);
@@ -46,7 +47,7 @@ const Player = () => {
         }
       }
     });
-  }, [enrolledCourses, courseId, userData]);
+  };
 
   const markLectureAsCompleted = async (lectureId) => {
     try {
@@ -101,10 +102,11 @@ const Player = () => {
 
   useEffect(() => {
     getCourseData();
-  }, [getCourseData]);
+  }, [enrolledCourses, userData]);
   useEffect(() => {
     getCourseProgress();
   }, []);
+
   return courseData ? (
     <>
       <div className="p-4 sm:p-10 flex flex-col-reverse md:grid md:grid-cols-2 gap-10">
@@ -209,15 +211,15 @@ const Player = () => {
                   {playerData.chapter}.{playerData.lecture}{" "}
                   {playerData.lectureTitle}
                 </p>
-                <button
-                  onClick={() => markLectureAsCompleted(playerData.lectureId)}
-                  className="text-blue-600"
-                >
-                  {progressData &&
-                  progressData.lectureCompleted.includes(playerData.lectureId)
-                    ? "Completed"
-                    : "Mark Complete"}
-                </button>
+                {progressData &&
+                progressData.lectureCompleted.includes(playerData.lectureId) ? (
+                  <p className="text-green-500"> Completed</p>
+                ) : (
+                  <button
+                    onClick={() => markLectureAsCompleted(playerData.lectureId)}
+                    className="text-blue-600 cursor-pointer"
+                  >Mark As Completed</button>
+                )}
               </div>
             </div>
           ) : (

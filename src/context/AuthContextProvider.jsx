@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import AuthContext from "./AuthContext";
 import {
@@ -10,9 +9,15 @@ import {
   signOut,
 } from "firebase/auth";
 import { auth } from "../config/firebase.config";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
 
+const backendUrl = import.meta.env.VITE_API_BASE_URL;
 const provider = new GoogleAuthProvider();
+
 const AuthContextProvider = ({ children }) => {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -28,13 +33,27 @@ const AuthContextProvider = ({ children }) => {
 
   const logOut = async () => {
     try {
+      //Telling the backend to clear the httpOnly cookie
+      const { data } = await axios.post(
+        `${backendUrl}/auth/sign-out`,
+        {},
+        {
+          withCredentials: true, //sending the cookie for the server to clear it
+        }
+      );
+
+      //  Sign out from the Firebase client
       await signOut(auth);
       setUser(null);
       setLoading(true);
-      alert("Logout successful");
+
+      if (data.success) {
+        toast.success(data.message);
+      }
+      navigate("/");
     } catch (error) {
-      alert("Something wrong");
-      console.error("Logout Error:", error.message);
+      console.log(error);
+      toast.warn("Logout Failed");
     }
   };
 

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import appContext from "../../context/AppContext";
 import Loading from "../../components/student/Loading";
 import Footer from "../../components/student/Footer";
@@ -15,6 +15,7 @@ const CourseDetails = () => {
   const backendUrl = import.meta.env.VITE_API_BASE_URL;
 
   const { id } = useParams();
+  const navigate = useNavigate();
   const [courseData, setCourseData] = useState(null);
   const [openSections, setOpenSections] = useState({});
   const [isAlreadyEnrolled, setIsAlreadyEnrolled] = useState(false);
@@ -33,7 +34,6 @@ const CourseDetails = () => {
 
   // Components..................................
   const lectureContent = (lecture) => {
-    
     return (
       <>
         <img src={assets.play_icon} alt="play icon" className="w-4 h-4 mt-1" />
@@ -245,7 +245,7 @@ const CourseDetails = () => {
               </p>
               <p className="text-lg text-gray-500 ">
                 {currency}{" "}
-                <span className="line-through">{courseData.coursePrice}</span>                
+                <span className="line-through">{courseData.coursePrice}</span>
               </p>
               <p className="md:text-lg text-gray-500">
                 {courseData.discount}% off
@@ -267,12 +267,16 @@ const CourseDetails = () => {
                 <p>{calculateNoOfLectures(courseData)}</p>
               </div>
             </div>
-            <button
-              onClick={enrolledCourse}
-              className="md:mt-6 mt-4 w-full cursor-pointer py-3 rounded bg-blue-600 text-white font-medium"
-            >
-              {isAlreadyEnrolled ? "Already Enrolled" : "Enroll Now"}
+            <button className="md:mt-6 mt-4 w-full cursor-pointer py-3 rounded bg-blue-600 text-white font-medium">
+              {isAlreadyEnrolled ? (
+                <>
+                  <p onClick={() => navigate("/my-enrollments")}>Resume</p>
+                </>
+              ) : (
+                <p onClick={enrolledCourse}>Enroll Now</p>
+              )}
             </button>
+
             <div className="pt-6">
               <p className="md:text-xl font-medium text-gray-800">
                 What's in the course??

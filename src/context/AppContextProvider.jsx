@@ -9,7 +9,7 @@ import { useNavigate } from "react-router";
 
 export const AppContextProvider = ({ children }) => {
   const currency = import.meta.env.VITE_CURRENCY;
-  const API_URL = import.meta.env.VITE_API_BASE_URL;
+  const backendUrl = import.meta.env.VITE_API_BASE_URL;
 
   const [allCourses, setAllCourses] = useState([]);
   const [isEducator, setIsEducator] = useState(false);
@@ -21,7 +21,7 @@ export const AppContextProvider = ({ children }) => {
   //fetch user data from mongo
   const fetchUser = async () => {
     try {
-      const { data } = await axios.get(`${API_URL}/user/user-details`, {
+      const { data } = await axios.get(`${backendUrl}/user/user-details`, {
         withCredentials: true,
       });
       console.log(data.userDetails);
@@ -33,7 +33,6 @@ export const AppContextProvider = ({ children }) => {
       if (error.response?.status) {
         toast.error("Please Login again");
         navigate("/register");
-        await logOut();
         return;
       }
     }
@@ -42,7 +41,7 @@ export const AppContextProvider = ({ children }) => {
   // fetch all courses
   const fetchAllCourses = async () => {
     try {
-      const { data } = await axios.get(`${API_URL}/course/all`);
+      const { data } = await axios.get(`${backendUrl}/course/all`);
       if (data.success) {
         setAllCourses(data.courses);
       } else {
@@ -55,7 +54,7 @@ export const AppContextProvider = ({ children }) => {
 
   const fetchUserEnrolledCourses = async () => {
     try {
-      const { data } = await axios.get(API_URL + "/user/enrolled-courses", {
+      const { data } = await axios.get(backendUrl + "/user/enrolled-courses", {
         withCredentials: true,
       });
       if (data.success) {
@@ -131,7 +130,7 @@ export const AppContextProvider = ({ children }) => {
     calculateCourseDuration,
     calculateNoOfLectures,
     enrolledCourses,
-    API_URL,
+    backendUrl,
   };
   return <appContext.Provider value={value}>{children}</appContext.Provider>;
 };

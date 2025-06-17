@@ -7,7 +7,7 @@ import { uploadImage } from "../../utilities/utilities";
 import { toast } from "react-toastify";
 
 const AddCourse = () => {
-  const API_URL = import.meta.env.VITE_API_BASE_URL;
+  const backendUrl = import.meta.env.VITE_API_BASE_URL;
 
   const quillRef = useRef(null);
   const editorDivRef = useRef(null);
@@ -160,7 +160,7 @@ const AddCourse = () => {
     if (!imgLoading) {
       try {
         const { data } = await axios.post(
-          `${API_URL}/educator/add-course`,
+          `${backendUrl}/educator/add-course`,
           courseData,
           { withCredentials: true }
         );

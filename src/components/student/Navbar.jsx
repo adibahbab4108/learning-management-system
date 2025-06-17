@@ -8,7 +8,7 @@ import axios from "axios";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const API_URL = import.meta.env.VITE_API_BASE_URL;
+  const backendUrl = import.meta.env.VITE_API_BASE_URL;
   const { user, logOut } = useContext(AuthContext);
   const { isEducator, setIsEducator } = useContext(appContext);
 
@@ -26,7 +26,7 @@ const Navbar = () => {
       if (result.isConfirmed) {
         axios
           .patch(
-            `${API_URL}/user/update-role`,
+            `${backendUrl}/user/update-role`,
             { role: "educator" },
             { withCredentials: true }
           )
